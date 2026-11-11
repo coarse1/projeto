@@ -1,0 +1,5 @@
+package mainEnum;
+
+public enum Commands {
+	HELP, QUIT, ADDJOURNEY, FINDJOURNEY, FINDJOURNEYMINSTOPS, REMOVEJOURNEY;
+}
