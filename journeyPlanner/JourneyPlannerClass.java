@@ -73,8 +73,9 @@ public class JourneyPlannerClass implements JourneyPlanner {
 			Entry<DepartureKey, Journey> entry = it.next();
 			if(entry.key().time().compareTo(time) >= 0){
 				Journey journey = entry.value();
+				int start = journey.positionOf(from.getIndex());
 				int end = journey.positionOf(to.getIndex());
-				if(end>=0)
+				if(start >= 0 && end>=0 && start < end)
 					return makeTrip(journey, journey.positionOf(from.getIndex()), end);
 			}
 		}
@@ -96,11 +97,11 @@ public class JourneyPlannerClass implements JourneyPlanner {
 				afterInterval = true;
 			else if(time.compareTo(minTime) >= 0){
 				Journey journey = entry.value();
+				int start = journey.positionOf(from.getIndex());
 				int end = journey.positionOf(to.getIndex());
-				if(end>=0) {
+				if(start >= 0 && end>=0 && start < end) {
 					Trip trip = makeTrip(journey, journey.positionOf(from.getIndex()), end);
-					if(best == null || trip.stops() < best.stops() ||
-							(trip.stops() == best.stops() && trip.arrival().compareTo(best.arrival())<0))
+					if(isBetter(trip, best))
 						best = trip;
 				}
 			}
@@ -131,6 +132,28 @@ public class JourneyPlannerClass implements JourneyPlanner {
 		Stop first = journey.getStop(start);
 		Stop last = journey.getStop(end);
 		return  new Trip(journey.getID(), first.name(), first.departure(), last.name(), last.arrival(), end- start);
+	}
+	
+	private boolean isBetter(Trip trip, Trip best) {
+		if(best == null) {
+			return true;
+		}
+		
+		if(trip.stops() != best.stops()) {
+			return trip.stops() < best.stops();
+		}
+		
+		int betterArrival = trip.arrival().compareTo(best.arrival());
+		if(betterArrival != 0) {
+			return betterArrival < 0;
+		}
+		
+		int betterDep = trip.departure().compareTo(best.departure());
+		if(betterDep != 0) {
+			return betterDep < 0;
+		}
+		
+		return false;
 	}
 
 	@Serial

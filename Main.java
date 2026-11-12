@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.Scanner; 
 import mainEnum.*;
 import journeyPlanner.*;
 import java.io.*;
@@ -95,7 +95,7 @@ public class Main {
 			System.out.printf(Interactions.INVALID_STATION.getString());
 		else if (times.length != 2 || !isValidTime(times[0]) || !isValidTime(times[1])){
 			System.out.printf(Interactions.INVALID_TIME.getString());
-		}else if (times[0].compareTo(times[1]) > 0)
+		}else if (times[0].compareTo(times[1]) >= 0)
 			System.out.printf(Interactions.INVALID_INTERVAL.getString());
 		else if (!jp.inOrder(origin, destination))
 			System.out.printf(Interactions.WRONG_ORDER.getString());

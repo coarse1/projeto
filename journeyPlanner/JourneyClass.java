@@ -64,34 +64,4 @@ public class JourneyClass implements Journey {
 	public int hashCode() {
 		return ID.hashCode();
 	}
-
-	/**
-	@Serial
-	private void writeObject(ObjectOutputStream oos) throws IOException {
-		oos.defaultWriteObject();
-
-		oos.writeObject(ID);
-		oos.writeInt(stops.size());
-
-		Iterator<Stop> it = stops.iterator();
-		while (it.hasNext()) {
-			oos.writeObject(it.next());
-		}
-	}
-
-	@Serial
-	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-		ois.defaultReadObject();
-
-		ID = (String) ois.readObject();
-		int size = ois.readInt();
-
-		List<Stop> stops = new SinglyLinkedList<Stop>();
-		for (int i = size; i > 0; i--) {
-			stops.addLast((Stop) ois.readObject());
-		}
-
-		this.stops = stops;
-	}
-	*/
 }
