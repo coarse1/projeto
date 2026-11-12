@@ -37,7 +37,7 @@ class BSTreeTest {
 		assertEquals("c", tree.get("three"));
 		assertEquals("d", tree.get("four"));
 		assertEquals("e", tree.get("five"));
-		assertNull(tree.get("6"));
+		assertNull(tree.get("six"));
 
 		assertEquals("a", tree.put("one", "A"));
 		assertEquals("c", tree.put("three", "C"));
