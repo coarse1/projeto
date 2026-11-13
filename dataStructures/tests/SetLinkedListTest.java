@@ -1,6 +1,8 @@
 package dataStructures.tests;
 
-import static org.junit.jupiter.api.Assertions.*; 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -148,5 +150,29 @@ class SetLinkedListTest {
 		assertEquals("five", it.next());
 		assertFalse(it.hasNext());
 		assertThrows(NoSuchElementException.class, it::next);
+	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	void testSerialization() throws IOException, ClassNotFoundException {
+		SetLinkedList<String> set = makeSet();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+			oos.writeObject(set);
+		}
+
+		SetLinkedList<String> deserializedSet;
+		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+			deserializedSet = (SetLinkedList<String>) ois.readObject();
+		}
+
+		assertTrue(set.size() == deserializedSet.size() && deserializedSet.size() == 5);
+		assertEquals(set.get("one"), deserializedSet.get("one"));
+		assertEquals(set.get("two"), deserializedSet.get("two"));
+		assertEquals(set.get("three"), deserializedSet.get("three"));
+		assertEquals(set.get("four"), deserializedSet.get("four"));
+		assertEquals(set.get("five"), deserializedSet.get("five"));
 	}
 }
