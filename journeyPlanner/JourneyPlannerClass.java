@@ -9,6 +9,17 @@ import dataStructures.Map;
 import dataStructures.Map.Entry;
 import dataStructures.SepChainHashTable;
 
+/**
+ * Implementation of the transportation network:
+ * - line: list of the stations, in order;
+ * - stations: hash table name (lower case) -> station;
+ * - journeys: hash table identifier (lower case) -> journey;
+ *  - in each station, a sorted map (BSTree) with the journeys that depart from it, ordered by departure time and
+ *  insertion order.
+ *
+ * Space complexity: O(S + J*k), where S is the number of stations, J the number of journeys and k the number of stops
+ * of a journey (each journey also appears in the sorted maps of k-1 stations).
+ */
 public class JourneyPlannerClass implements JourneyPlanner {
 
 	private static final long serialVersionUID = 0L;
@@ -21,6 +32,11 @@ public class JourneyPlannerClass implements JourneyPlanner {
 
 	private  int nextOrder;
 
+	/**
+	 * Creates an empty network.
+	 *
+	 * Time complexity: best case O(1); worst case O(1) (empty tables with the default size).
+	 */
 	public JourneyPlannerClass() {
 		line = new SinglyLinkedList<String>();
 		stations = new SepChainHashTable<>();
@@ -119,8 +135,26 @@ public class JourneyPlannerClass implements JourneyPlanner {
 		}
 	}
 
+	/**
+	 * Returns the station with the given name (case-insensitive).
+	 *
+	 * Time complexity: best case O(1); worst case O(S) (all names in the same position
+	 * of the hash table); O(1) expected.
+	 *
+	 * @param name - name of the station
+	 * @return the station, or null if it does not exist
+	 */
 	private Station getStation(String name){return stations.get(name.toLowerCase());}
 
+	/**
+	 * Inserts the departures of the journey (every stop except the last, which has no departure) in the sorted maps of
+	 * the stations.
+	 *
+	 * Time complexity (k = stops of the journey, P = departures of a station): best case O(k); worst case O(k*P)
+	 * (degenerate trees); on average O(k log P).
+	 *
+	 * @param journey - the journey
+	 */
 	private void registerDepartures(Journey journey){
 		for(int i = 0; i < journey.getNumberOfStops() -1; i++){
 			Stop stop = journey.getStop(i);
@@ -128,12 +162,33 @@ public class JourneyPlannerClass implements JourneyPlanner {
 		}
 	}
 
+	/**
+	 * Builds the result of a search between two stops of a journey (the number of stops is the difference between
+	 * their positions).
+	 *
+	 * Time complexity: best case O(1); worst case O(1).
+	 *
+	 * @param journey - the journey
+	 * @param start - position of the stop at the origin
+	 * @param end - position of the stop ate the destination
+	 * @return result of the search
+	 */
 	private Trip makeTrip(Journey journey, int start, int end){
 		Stop first = journey.getStop(start);
 		Stop last = journey.getStop(end);
 		return  new Trip(journey.getID(), first.name(), first.departure(), last.name(), last.arrival(), end- start);
 	}
-	
+
+	/**
+	 * Checks whether a result is better than the best one so far: fewer stops, then earlier arrival, then earlier
+	 * departure.
+	 *
+	 * Time complexity: best case O(1); worst case O(1) (compares numbers and times).
+	 *
+	 * @param trip - result to compare
+	 * @param best - best result so far(null if there is none)
+	 * @return true if trip is better than best
+	 */
 	private boolean isBetter(Trip trip, Trip best) {
 		if(best == null) {
 			return true;
@@ -156,6 +211,16 @@ public class JourneyPlannerClass implements JourneyPlanner {
 		return false;
 	}
 
+	/**
+	 * Writes the insertion counter, the stations of the line and the journeys. The stations and their sorted maps are
+	 * not written: they are rebuilt when reading.
+	 *
+	 * Time complexity: best case O(S + J*k); worst case O(S + J*k) (every station and every journey, with its stops,
+	 * is written).
+	 *
+	 * @param oos - output stream
+	 * @throws IOException
+	 */
 	@Serial
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		oos.defaultWriteObject();
@@ -176,6 +241,15 @@ public class JourneyPlannerClass implements JourneyPlanner {
 		}
 	}
 
+	/**
+	 * Reads the line and the journeys and rebuilds the stations and the sorted maps of departures.
+	 *
+	 * Time complexity: best case O(S + J*k); worst case O(S + J*k*P) (degenerate trees); on average O(S + J*k log P).
+	 *
+	 * @param ois
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@Serial
 	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 		ois.defaultReadObject();

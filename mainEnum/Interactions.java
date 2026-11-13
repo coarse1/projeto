@@ -1,5 +1,11 @@
 package mainEnum;
 
+/**
+ * Messages written by the application. Each constant keeps the format
+ * string that is given to printf.
+ *
+ * Space complexity: O(1) (fixed number of messages).
+ */
 public enum Interactions {
 	HELP("addJourney: Inserts a new journey into the transportation network.%nfindJourney: Finds the earliest journey that allows a passenger to travel from one station to another.%nfindJourneyMinStops: Finds the direct journey with the minimum number of stops.%nremoveJourney: Removes the given journey from the transportation network.%nhelp: Displays the list of available commands.%nquit: Saves the transportation network and terminates the application.%n"),
 	NETWORK_RESTORED("Transportation network restored successfully.%n"),
@@ -14,10 +20,24 @@ public enum Interactions {
 
 	private final String string;
 
+	/**
+	 * Creates a message with the given text.
+	 *
+	 * Time complexity: best case O(1); worst case O(1).
+	 *
+	 * @param string - text of the message
+	 */
 	Interactions(String string) {
 		this.string = string;
 	}
 
+	/**
+	 * Returns the text of the message
+	 *
+	 * Time complexity: best case O(1); worst case O(1).
+	 *
+	 * @return text of the message
+	 */
 	public final String getString() {
 		return string;
 	}

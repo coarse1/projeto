@@ -5,9 +5,36 @@ import java.io.*;
 import dataStructures.List;
 import dataStructures.SinglyLinkedList;
 
+
+/**
+ * Main class of the "Journey Planner" application.
+ * Reads the user's commands, forwards them to the transportation network and
+ * writes the results. When it starts, it restores the network from the
+ * serialization file (or, if it does not exist, loads the line definition);
+ * before it ends, it saves it again.
+ *
+ * Space complexity: O(S + J*k), where S is the number of stations, J the number
+ * of journeys and k the number of stops of a journey (the space is taken up by
+ * the JourneyPlanner that main creates).
+ *
+ * authors: Andre Carneiro and Luis Fidalgo
+ * ID: 74372_75129
+ */
 public class Main {
 	private static final File FILE = new File("JourneyPlanner.ser");
 
+	/**
+	 * Program entry point. Restores (or creates) the network, processes the
+	 * commands until "quit" and, at the end, serializes the network.
+	 *
+	 * Time complexity (c = number of commands, k = stops of a journey,
+	 * P = departures of a station, S = stations, J = journeys):
+	 * best case O(1) (there is no network nor line definition);
+	 * worst case O(S + J*k*P + c*k*P) (the network is restored and each of the
+	 * c commands costs at most O(k*P)).
+	 *
+	 * @param args - arguments (the first one is the line definition file)
+	 */
 	public static void main(String[] args) {
 		JourneyPlanner jp = Main.deserialize(args);
 		if (jp == null) {
@@ -21,6 +48,15 @@ public class Main {
 		Main.serialize(jp);
 	}
 
+	/**
+	 * Reads the commands and calls the matching method, until "quit".
+	 *
+	 * Time complexity: best case O(1) (the first command is quit);
+	 * worst case O(c*k*P) (c commands, each one costs at most O(k*P)).
+	 *
+	 * @param in - Scanner
+	 * @param jp - journey planner
+	 */
 	private static void evaluateCommand(Scanner in, JourneyPlanner jp) {
 		String command;
 		do {
@@ -46,10 +82,27 @@ public class Main {
 		} while (!command.equals(Commands.QUIT.toString()));
 	}
 
+	/**
+	 * Command "help": writes the list of available commands.
+	 *
+	 * Time complexity: best case O(1); worst case O(1)
+	 * (the number of commands is fixed).
+	 */
 	private static void help() {
 		System.out.printf(Interactions.HELP.getString());
 	}
 
+	/**
+	 * Command "addJourney": reads the identifier and the k stops of the journey
+	 * and adds it, if no journey with that identifier exists.
+	 *
+	 * Time complexity: best case O(k) (the journey already exists: only the k stops
+	 * are read); worst case O(k*P) (each of the k-1 departures is inserted in the
+	 * soted map of its station, which may be degenerate; on average O(k log P)).
+	 *
+	 * @param in - Scanner
+	 * @param jp - journey planner
+	 */
 	private static void addJourney(Scanner in, JourneyPlanner jp) {
 		String ID = in.nextLine().trim();
 		int n = Integer.parseInt(in.nextLine().trim());
@@ -73,6 +126,18 @@ public class Main {
 		System.out.printf(Interactions.JOURNEY_ADDED.getString());
 	}
 
+	/**
+	 * Command "findJourney": reads the origin, the destination and the time,
+	 * validates them (station, time, order) and writes the earliest journey,
+	 * or reports that there is no direct journey.
+	 *
+	 * Time complexity: best case O(1) (invalid input, or the first departure of the
+	 * origin is the answer); worst case O(P*k) (every departure of the origin is
+	 * visited and, for each one, the destination is searched among the k stops).
+	 *
+	 * @param in - Scanner
+	 * @param jp - journey Planner
+	 */
 	private static void findJourney(Scanner in, JourneyPlanner jp) {
 		String origin = in.nextLine().trim();
 		String destination = in.nextLine().trim();
@@ -87,10 +152,23 @@ public class Main {
 			printTrip(jp.findJourney(origin, destination, time), false);
 	}
 
+	/**
+	 * Command "findJourneyMinStops": reads the origin, the destination and the
+	 * time interval, validates them (station, time, interval, order) and writes the
+	 * journey with the fewest stops, or reports that there is no direct journey.
+	 *
+	 * Time complexity: best case O(1) (invalid input, or no departures from the
+	 * origin); worst case O(P*k) (every departure inside the interval is visited and,
+	 * for each one, the destination is searched among the k stops; the search stops
+	 * after the end of the interval).
+	 *
+	 * @param in - Scanner
+	 * @param jp - journey Planner
+	 */
 	private static void findJourneyMinStops(Scanner in, JourneyPlanner jp) {
 		String origin = in.nextLine().trim();
 		String destination = in.nextLine().trim();
-		String[] times = in.nextLine().trim().split("\\s+");
+		String[] times = in.nextLine().trim().split(" ");
 		if (!jp.hasStation(origin) || !jp.hasStation(destination))
 			System.out.printf(Interactions.INVALID_STATION.getString());
 		else if (times.length != 2 || !isValidTime(times[0]) || !isValidTime(times[1])){
@@ -103,6 +181,15 @@ public class Main {
 			printTrip(jp.findJourneyMinStops(origin, destination, times[0], times[1]), true);
 	}
 
+	/**
+	 * Checks whether the time has the format HH:mm, with hours 00-23 and
+	 * minutes 00-59
+	 *
+	 * Time complexity: best case O(1); worst case O(1) (the time has 5 characters).
+	 *
+	 * @param time - time read
+	 * @return true if the time is Valid, false otherwise
+	 */
 	private static boolean isValidTime(String time){
 		if(time.length() != 5 || time.charAt(2) != ':')
 			return false;
@@ -116,6 +203,15 @@ public class Main {
 		return  hours <= 23 && minutes <= 59;
 	}
 
+	/**
+	 * Writes the result of a search (journey, stations, times and, if asked, the
+	 * number of stops), or "No direct journey is available." if there is none.
+	 *
+	 * Time complexity: best case O(1); worst case O(1).
+	 *
+	 * @param trip - result of the search (null if there is none)
+	 * @param showStops - true to also write the number of stops
+	 */
 	private static void  printTrip(Trip trip, boolean showStops){
 		if(trip == null){
 			System.out.printf(Interactions.NO_DIRECT_JOURNEY.getString());
@@ -127,6 +223,17 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Command "removeJourney": reads the identifier and removes the journey,
+	 * or reports that it does not exist.
+	 *
+	 * Time complexity: best case O(1) (the journey does not exist: one search in the
+	 * hash table); worst case O(k*P) (each of the k-1 departures is removed from the
+	 * sorted map of its station; on average O(k log P)).
+	 *
+	 * @param in - Scanner
+	 * @param jp - journey planner
+	 */
 	private static void removeJourney(Scanner in, JourneyPlanner jp) {
 		String ID = in.nextLine().trim();
 
@@ -139,6 +246,14 @@ public class Main {
 		System.out.printf(Interactions.JOURNEY_REMOVED.getString());
 	}
 
+	/**
+	 * Saves (serializes) the network to the file JourneyPlanner.ser.
+	 *
+	 * Time complexity: best case O(S + J*k); worst case O(S + J*k)
+	 * (every station and every journey, with its stops, is written).
+	 *
+	 * @param jp - journey planner to save
+	 */
 	private static void serialize(JourneyPlanner jp) {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE))) {
 
@@ -149,6 +264,17 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Restores (deserializes) the network from the file. If the file does not
+	 * exist, it loads the line definition given as argument.
+	 *
+	 * Time complexity: best case O(1) (there is no file nor argument);
+	 * worst case O(S + J*k*P) (every journey is read and its departures are inserted
+	 * again in the sorted maps of the stations; on average O(S + J*k log P)).
+	 *
+	 * @param mainArgs - program arguments
+	 * @return restored network or null
+	 */
 	private static JourneyPlanner deserialize(String[] mainArgs) {
 		if (FILE.exists()) {
 			try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE))) {
@@ -170,6 +296,16 @@ public class Main {
 		return null;
 	}
 
+	/**
+	 * Reads the line definition file (number of stations followed by their
+	 * names) and creates a network with those stations.
+	 *
+	 * Time complexity: best case O(S); worst case O(S)
+	 * (each station is added in O(1) expected time)
+	 *
+	 * @param lineDefinition - name of the line definition file
+	 * @return new network, or null if the file cannot be read
+	 */
 	private static JourneyPlanner deserializeFromLineDefinition(String lineDefinition) {
 		try (Scanner file = new Scanner(new File(lineDefinition))) {
 
