@@ -8,6 +8,10 @@ import java.io.ObjectOutputStream;
 
 /**
  * Binary Search Tree Sorted Map
+ * 
+ * Spatial complexity: O(n) where n is the number of elements
+ * 
+ * 
  * @author AED  Team
  * @version 1.0
  * @param <K> Generic Key
@@ -21,22 +25,39 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
     private Comparator<K> comparator;
     /**
      * Default comparator
-     * @param <K>
+     * 
+     * Spatial complexity O(1)
+     * 
+     * @param <K> Generic Key
      */
     static class DefaultComparator<K extends Comparable<K>> implements Comparator<K> {
     	private static final long serialVersionUID = 1L;
+    	
+    	/**
+    	 * Temporal complexity O(1) 
+    	 */
         public int compare(K a, K b)  {
             return a.compareTo(b);
         }
     }
     /**
-     * Constructors
+     * Constructor
+     * 
+     * Temporal complexity O(1)
+     * 
      */
     public BSTree(){
         super();
         comparator= new DefaultComparator<>();
     }
 
+    /**
+     * Constructor
+     * 
+     * Temporal complexity O(1)
+     * 
+     * @param compare - comparator
+     */
     public BSTree(Comparator<K> compare){
         super();
         comparator = compare;
@@ -44,7 +65,13 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
     /**
      * Returns the entry with the smallest key in the map.
      *
-     * @return
+     * Temporal complexity: best case O(1), worst case O(n), average case O(log n)
+     * 
+     * O(1) if empty or if the root is the leftmost element
+     * O(n) if the tree is completely skewed to the left
+     *
+     *
+     * @return entry with the smallest key 
      * @throws EmptyMapException
      */
     public Entry<K, V> minEntry() {
@@ -56,7 +83,12 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
     /**
      * Returns the entry with the largest key in the map.
      *
-     * @return
+     * Temporal complexity: best case O(1), worst case O(n), average case O(log n)
+     * 
+     * O(1) if empty or if the root is the rightmost element
+     * O(n) if the tree is completely skewed to the right
+     *
+     * @return entry with the largest key
      * @throws EmptyMapException
      */
     public Entry<K, V> maxEntry() {
@@ -68,6 +100,12 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
     /**
      * If there is an entry in the dictionary whose key is the specified key,
      * returns its value; otherwise, returns null.
+     *
+     * Temporal complexity: 
+     * 
+     * best case: O(1)
+     * average case: O(log n)
+     * worst case: O(n)
      *
      * @param key whose associated value is to be returned
      * @return value of entry in the dictionary whose key is the specified key,
@@ -89,6 +127,12 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
      * If there is an entry in the dictionary whose key is the specified key,
      * replaces its value by the specified value and returns the old value;
      * otherwise, inserts the entry (key, value) and returns null.
+     *
+     * Temporal complexity: 
+     * 
+     * best case: O(1)
+     * average case: O(log n)
+     * worst case: O(n)
      *
      * @param key   with which the specified value is to be associated
      * @param value to be associated with the specified key
@@ -129,6 +173,12 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
      * removes it from the map and returns its value;
      * otherwise, returns null.
      *
+     * Temporal complexity: 
+     * 
+     * best case: O(1)
+     * average case: O(log n)
+     * worst case: O(n)
+     *
      * @param key whose entry is to be removed from the map
      * @return previous value associated with key,
      * or null if the dictionary does not an entry with that key
@@ -167,25 +217,68 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
     /**
      * Returns an iterator of the entries in the dictionary.
      *
+     * Temporal complexity: O(1)
+     *
      * @return iterator of the entries in the dictionary
      */
     public Iterator<Entry<K, V>> iterator() {
         return new InOrderIterator<>((BTNode<Entry<K,V>>) root);
     }
 
-    //Manual Serialization
+    
+    /**
+     * Returns a breadth iterator.
+     * 
+     * Temporal complexity: O(1)
+     */
     Iterator<Entry<K, V>> iteratorLevel() {
         return new BreadthIterator<>((BTNode<Entry<K,V>>)root);
     }
 
+    /**
+     * Used for deserialization.
+     * 
+     * Temporal complexity: 
+     * 
+     * best case: O(1)
+     * average case: O(log n)
+     * worst case: O(n)
+     * 
+     * As readObject in LinkedTree has complexity of O(n), using addElem in its interior yields
+     * a temporal complexity for readObject of:
+     * 
+     * O(n) in the best case,
+     * O(n log n) in the average case
+     * O(n^2) in the worst case
+     * 
+     * Used inside readObject
+     * 
+     */
     void addElem(Entry<K, V> element) {
         put(element.key(),element.value());
     }
 
+    /**
+     * Used for serialization.
+     * 
+     * Temporal complexity: O(1)
+     * 
+     * As writeObject in LinkedTree has complexity of O(n), using writeData in its interior yields
+     * a temporal complexity for writeObject of O(n).
+     * 
+     * Used inside writeObject.
+     */
     void writeData(ObjectOutputStream oos) throws IOException {
         oos.writeObject(comparator);
     }
 
+    /**
+     * Used for deserialization.
+     *      
+     * Temporal complexity: O(1)
+     * 
+     * Used inside readObject.
+     */
     @SuppressWarnings("unchecked")
 	void readData(ObjectInputStream ois)
             throws IOException, ClassNotFoundException {

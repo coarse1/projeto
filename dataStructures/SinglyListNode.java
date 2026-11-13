@@ -3,6 +3,8 @@ package dataStructures;
 /**
  * Singly List Node Implementation
  * 
+ * Spatial complexity: O(1) - only one element per node
+ * 
  * @author AED Team
  * @version 1.0
  * @param <E> Generic Element
@@ -24,7 +26,10 @@ class SinglyListNode<E> implements LinkedNode<E> {
 	private LinkedNode<E> next;
 
 	/**
+	 * Creates a node with the given element, pointing to the given next node
 	 *
+	 * Time complexity: best case O(1); worst case O(1)
+	 * 
 	 * @param theElement - The element to be contained in the node
 	 * @param theNext    - the next node
 	 */
@@ -34,6 +39,9 @@ class SinglyListNode<E> implements LinkedNode<E> {
 	}
 
 	/**
+	 * Creates a node with the given element and no next node
+	 *
+	 * Time complexity: best case O(1); worst case O(1)
 	 *
 	 * @param theElement to be contained in the node
 	 */
@@ -42,6 +50,7 @@ class SinglyListNode<E> implements LinkedNode<E> {
 	}
 
 	/**
+	 * Time complexity: best case O(1); worst case O(1)
 	 *
 	 * @return the element contained in the node
 	 */
@@ -50,6 +59,7 @@ class SinglyListNode<E> implements LinkedNode<E> {
 	}
 
 	/**
+	 * Time complexity: best case O(1); worst case O(1)
 	 *
 	 * @return the next node
 	 */
@@ -58,6 +68,9 @@ class SinglyListNode<E> implements LinkedNode<E> {
 	}
 
 	/**
+	 * Replace the element stored in the node
+	 *
+	 * Time complexity: best case O(1); worst case O(1)
 	 *
 	 * @param newElement - New element to replace the current element
 	 */
@@ -66,6 +79,9 @@ class SinglyListNode<E> implements LinkedNode<E> {
 	}
 
 	/**
+	 * Replace the next element
+	 *
+	 * Time complexity: best case O(1); worst case O(1)
 	 *
 	 * @param newNext - node to replace the next node
 	 */

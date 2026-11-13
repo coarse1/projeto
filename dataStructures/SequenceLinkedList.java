@@ -6,6 +6,9 @@ import dataStructures.exceptions.InvalidPositionException;
 /**
  * Sequence Linked List
  * 
+ * Spatial complexity: O(n), where n is the number of elements (one node per
+ * element, with a reference to the element and another to the next node).
+ * 
  * @author AED Team
  * @version 1.0
  * @param <E> Generic Element
@@ -24,6 +27,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	/**
 	 * Returns the first element of the list.
 	 *
+	 * Temporal complexity: O(1)
+	 *
 	 * @return first element in the list
 	 * @throws NoSuchElementException - if size() == 0
 	 */
@@ -36,6 +41,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	/**
 	 * Returns the last element of the list.
 	 *
+	 * Temporal complexity: O(1)
+	 * 
 	 * @return last element in the list
 	 * @throws NoSuchElementException - if size() == 0
 	 */
@@ -51,6 +58,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	 * positions: 0, ..., size()-1. If the specified position is 0, it corresponds
 	 * to getFirst. If the specified position is size()-1, get corresponds to
 	 * getLast.
+	 *
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 *
 	 * @param position - position of the element to be returned
 	 * @return element at position
@@ -70,6 +79,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	/**
 	 * Return the node in the given position
 	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n)
+	 * 
 	 * @param position
 	 * @return
 	 */
@@ -83,6 +94,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	/**
 	 * Returns the position of the specified element in the list if the list
 	 * contains the element. Otherwise, returns -1.
+	 *
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 *
 	 * @param element - element to be searched in the list
 	 * @return position of the element in the list (or -1)
@@ -148,6 +161,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	/**
 	 * Returns the previous node, and the node on this position
 	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n)
+	 * 
 	 * @param position
 	 * @pre position > 0 && position < size()
 	 * @return
@@ -160,6 +175,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	/**
 	 * Removes and returns the element at the first position in the list.
 	 *
+	 * Temporal complexity: O(1)
+	 *
 	 * @return element removed from the first position of the list
 	 * @throws NoSuchElementException - if size() == 0
 	 */
@@ -171,6 +188,9 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 
 	/**
 	 * Removes and returns the element at the last position in the list.
+	 *
+	 * Time complexity: best case O(1); worst case O(n).
+	 * O(1) if list is empty or size == 1, otherwise O(n)
 	 *
 	 * @return element removed from the last position of the list
 	 * @throws NoSuchElementException - if size() == 0
@@ -190,6 +210,8 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	 * corresponds to removeFirst. If the specified position is size()-1, remove
 	 * corresponds to removeLast.
 	 *
+	 * Temporal complexity: best case: O(1), worst case: O(n)
+	 *
 	 * @param position - position of the element to be removed
 	 * @return element removed at position
 	 * @throws InvalidPositionException - if position is not valid in the list
@@ -206,6 +228,9 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	}
 
 	/**
+	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n)
+	 * 
 	 * Remove in the middle of the list
 	 */
 	E removeMiddle(int position) {
@@ -213,6 +238,9 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 	}
 
 	/**
+	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n)
+	 * 
 	 * Return the previous and the node in the given position
 	 */
 	pairNode<E> removeMiddleNode(int position) {
@@ -221,6 +249,9 @@ abstract class SequenceLinkedList<E> extends LinkedList<E> implements List<E> {
 		return pair;
 	}
 
+	/**
+	 * Appends element to the end of the list.
+	 */
 	void addElem(E element) {
 		this.addLast(element);
 	}

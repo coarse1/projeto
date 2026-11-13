@@ -8,8 +8,8 @@ import dataStructures.exceptions.NoSuchElementException;
  * @author AED Team
  * @version 1.0
  * @param <E> Generic Element
- *
- *            Space complexity: O(1) (it only keeps two references to nodes; it
+ * 
+ *            Spatial complexity: O(1) (it only keeps two references to nodes; it
  *            does not copy the list).
  */
 
