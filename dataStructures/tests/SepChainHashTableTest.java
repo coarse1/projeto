@@ -2,6 +2,8 @@ package dataStructures.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.*;
+
 import org.junit.jupiter.api.Test;
 import dataStructures.SepChainHashTable;
 import dataStructures.exceptions.NoSuchElementException;
@@ -90,18 +92,18 @@ class SepChainHashTableTest {
 		set.put(it.next());
 		assertTrue(it.hasNext());
 		set.put(it.next());
-		
+
 		assertFalse(it.hasNext());
 		assertThrows(NoSuchElementException.class, it::next);
 		assertEquals(5, set.size());
 		it.rewind();
-		
+
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
-		
+
 		assertTrue(set.contains("one"));
 		assertTrue(set.contains("two"));
 		assertTrue(set.contains("three"));
@@ -128,18 +130,18 @@ class SepChainHashTableTest {
 		set.put(it.next());
 		assertTrue(it.hasNext());
 		set.put(it.next());
-		
+
 		assertFalse(it.hasNext());
 		assertThrows(NoSuchElementException.class, it::next);
 		assertEquals(5, set.size());
 		it.rewind();
-		
+
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
-		
+
 		assertTrue(set.contains("a"));
 		assertTrue(set.contains("b"));
 		assertTrue(set.contains("c"));
@@ -166,18 +168,18 @@ class SepChainHashTableTest {
 		set.put(it.next());
 		assertTrue(it.hasNext());
 		set.put(it.next());
-		
+
 		assertFalse(it.hasNext());
 		assertThrows(NoSuchElementException.class, it::next);
 		assertEquals(5, set.size());
 		it.rewind();
-		
+
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
 		assertTrue(set.contains(it.next()));
-		
+
 		assertEquals("a", set.get(new Entry<String, String>("one", null)).value());
 		assertEquals("b", set.get(new Entry<String, String>("two", null)).value());
 		assertEquals("c", set.get(new Entry<String, String>("three", null)).value());
@@ -218,6 +220,30 @@ class SepChainHashTableTest {
 		assertTrue(ht.isEmpty());
 		assertEquals(0, ht.size());
 
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void testSerialization() throws IOException, ClassNotFoundException {
+		SepChainHashTable<String, String> table = makeTable();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+			oos.writeObject(table);
+		}
+
+		SepChainHashTable<String, String> deserializedTable;
+		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+			deserializedTable = (SepChainHashTable<String, String>) ois.readObject();
+		}
+
+		assertTrue(table.size() == deserializedTable.size() && deserializedTable.size() == 5);
+		assertEquals(table.get("one"), deserializedTable.get("one"));
+		assertEquals(table.get("two"), deserializedTable.get("two"));
+		assertEquals(table.get("three"), deserializedTable.get("three"));
+		assertEquals(table.get("four"), deserializedTable.get("four"));
+		assertEquals(table.get("five"), deserializedTable.get("five"));
 	}
 
 }
