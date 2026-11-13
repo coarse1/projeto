@@ -6,7 +6,7 @@ import java.io.*;
  * Linked List Includes description of general methods to be implemented by
  * linked lists.
  *
- * Space complexity: O(n), where n is the number of elements (one node per
+ * Spatial complexity: O(n), where n is the number of elements (one node per
  * element, with a reference to the element and another to the next node).
  *
  * @author AED Team
@@ -133,7 +133,7 @@ abstract class LinkedList<E> implements Serializable {
 	/**
 	 * Insert node (newNode) between pair.previous() and pair.node()
 	 *
-	 * Time complexity: best case O(1); worst case O(1)
+	 * Time complexity: best case O(1); worst case O(n)
 	 *
 	 * @pre: pair.previous()!=null && pair.node()!=null
 	 * @param newNode
@@ -173,7 +173,8 @@ abstract class LinkedList<E> implements Serializable {
 	/**
 	 * remove the last node (pair.node()) of the list
 	 *
-	 * Time complexity: best case O(1); worst case O(1)
+	 * Time complexity: best case O(1); worst case O(n)
+	 * O(1) if the list is empty or size == 1, otherwise O(n)
 	 *
 	 * @return
 	 */
@@ -199,7 +200,7 @@ abstract class LinkedList<E> implements Serializable {
 	/**
 	 * remove the node pair.node()
 	 *
-	 * Time complexity: best case O(1); worst case O(1)
+	 * Time complexity: best case O(1); worst case O(n)
 	 *
 	 * @pre: pair.previous()!=null && pair.node()!=null
 	 * @param pair

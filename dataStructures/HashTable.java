@@ -8,6 +8,8 @@ import java.io.Serial;
 /**
  * Hash Table
  * 
+ * Spatial complexity: O(n) where n is the number of elements (the hash table resizes and rehashes dynamically.)
+ * 
  * @author AED Team
  * @version 1.0
  * @param <K> Generic Key
@@ -27,15 +29,27 @@ abstract class HashTable<K, V> implements Map<K, V> {
 	// Number of entries to reach MAX_LOAD_FACTOR.
 	transient int maxSize;
 
+	/**
+	 * Constructor
+	 * 
+	 * Temporal complexity: O(1)
+	 */
 	public HashTable() {
 		currentSize = 0;
 	}
 
 	// Protected Static Methods
 
-	// Returns a prime number that is not less than the
-	// specified number; or zero if all such primes are greater
-	// than Integer.MAX VALUE.
+	/**
+	 * Returns a prime number that is not less than the specified number; or zero if
+	 * all such primes are greater than Integer.MAX VALUE.
+	 * 
+	 * Temporal complexity: O(1) (constant number of elements in the PRIMES array)
+	 * 
+	 * @param number
+	 * @return next prime larger or equal to the given number or zero if all such
+	 *         primes are greater than Integer.MAX_VALUE
+	 */
 	protected static int nextPrime(int number) {
 		int low = 0;
 		int high = PRIMES.length - 1;
@@ -58,13 +72,22 @@ abstract class HashTable<K, V> implements Map<K, V> {
 			1453043, 2179571, 3269377, 4904077, 7356119, 11034223, 16551361, 24827059, 37240597, 55860923, 83791441,
 			125687173, 188530777, 282796177, 424194271, 636291413, 954437161, 1431655751, 2147483647 };
 
-	// Returns true iff the hash table needs to do rehashing.
+
+	/**
+	 * Returns true iff the hash table needs to do rehashing.
+	 * 
+	 * Temporal complexity: O(1)
+	 * 
+	 * @return true iff the hash table is full and needs rehashing
+	 */
 	protected boolean isFull() {
 		return currentSize == maxSize;
 	}
 
 	/**
 	 * Returns true iff the map contains no entries.
+	 * 
+	 * Temporal complexity: O(1)
 	 *
 	 * @return true if the map is empty
 	 */
@@ -74,6 +97,8 @@ abstract class HashTable<K, V> implements Map<K, V> {
 
 	/**
 	 * Returns the number of entries in the map.
+	 *
+	 * Temporal complexity: O(1)
 	 *
 	 * @return number of elements in the map
 	 */
@@ -121,6 +146,14 @@ abstract class HashTable<K, V> implements Map<K, V> {
 	public abstract Iterator<Entry<K, V>> iterator();
 
 	// MANUAL SERIALIZATION
+	/**
+	 * Serializes the hash table.
+	 * 
+	 * Temporal complexity: assumed O(n) - depends on the implementation of writeData
+	 * 
+	 * @param oos
+	 * @throws IOException
+	 */
 	@Serial
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		oos.defaultWriteObject(); // write the normal attributes
@@ -133,6 +166,15 @@ abstract class HashTable<K, V> implements Map<K, V> {
 	}
 
 	// MANUAL DESERIALIZATION
+	/**
+	 * Deserializes the hash table.
+	 * 
+	 * Temporal complexity: assumed O(n) - depends on the implementation of put and readData
+	 * 
+	 * @param ois
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	@Serial
 	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 		ois.defaultReadObject(); // read the normal attributes

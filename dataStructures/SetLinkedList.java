@@ -1,5 +1,13 @@
 package dataStructures;
-
+/**
+ * 
+ * A linked list that also acts as a set: there are no repeated elements.
+ * 
+ * Spatial complexity: O(n), where n is the number of elements (one node per
+ * element, with a reference to the element and another to the next node).
+ * 
+ * @param <E> generic element
+ */
 public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 	private static final long serialVersionUID = 1L;
 
@@ -15,6 +23,8 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 	/**
 	 * If there is an element in the set equals to a specified element, returns the
 	 * element; otherwise, returns null.
+	 *
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 *
 	 * @param element
 	 * @return an element in the set equals to a specified element, or null
@@ -42,9 +52,11 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 	/**
 	 * If there is an element in the set equals to a specified element, returns
 	 * true; otherwise, returns false.
+	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 *
 	 * @param element
-	 * @return
+	 * @return true if contains the given element
 	 */
 	@Override
 	public boolean contains(E element) {
@@ -56,6 +68,8 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 	/**
 	 * Inserts the element, if there is not an element in the set equals to the
 	 * specified element and return true. otherwise returns false
+	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 * 
 	 * @param element to be added
 	 * @return true if insert the element, otherwise false
@@ -71,6 +85,8 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 	/**
 	 * If there is an element in the set equals to the specified element replace the
 	 * element and return old element. otherwise returns null
+	 *
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 *
 	 * @param element to be added
 	 * @return old element, otherwise null
@@ -90,6 +106,8 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 	/**
 	 * If there is an element in the set equals to the specified element, removes it
 	 * from the set and returns the element; otherwise, returns null.
+	 *
+	 * Temporal complexity: best case: O(1), worst case: O(n)
 	 *
 	 * @param element to be removed
 	 * @return element removed, or null if the set does not an element equals
@@ -118,10 +136,21 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
 		return oldE;
 	}
 
+	/**
+	 * Tests if every element is different, ensuring the class is in a valid state.
+	 */
 	private void invariant() {
 		assert allDif();
 	}
 
+	/**
+	 * Scans the linked list and checks if every element is different.
+	 * If it finds two elements that are equal, breaks early, and returns false.
+	 * Otherwise, it must go through the entire list at least once per element, which means O(n^2) complexity.
+	 * 
+	 * Temporal complexity: best case: O(1), worst case: O(n^2)
+	 * @return true if every element is different
+	 */
 	private boolean allDif() {
 		if (currentSize < 2) {
 			return true;

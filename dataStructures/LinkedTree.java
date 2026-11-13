@@ -3,6 +3,9 @@ import java.io.*;
 
 /**
  * Linked Tree
+ * 
+ * Spatial complexity O(n), where n is the number of elements
+ * 
  * @author AED  Team
  * @version 1.0
  * @param <E> Generic element
@@ -21,6 +24,10 @@ abstract class LinkedTree<E> implements Serializable {
      */
     transient int currentSize;
 
+    /** Constructor
+     *  
+     *  Temporal complexity O(1)
+     */
     public LinkedTree(){
         root=null;
         currentSize=0;
@@ -28,6 +35,8 @@ abstract class LinkedTree<E> implements Serializable {
 
     /**
      * Returns true iff the tree contains no entries.
+     *
+     * Temporal complexity: O(1)
      *
      * @return true if the tree is empty
      */
@@ -38,6 +47,8 @@ abstract class LinkedTree<E> implements Serializable {
     /**
      * Returns the number of entries in the tree.
      *
+     * Temporal complexity: O(1)
+     *
      * @return number of elements in the tree
      */
     public int size() {
@@ -47,13 +58,26 @@ abstract class LinkedTree<E> implements Serializable {
 
     /**
      * Return the root of the tree
-     * @return
+     * 
+     * Temporal complexity: O(1)
+     * 
+     * @return root
      */
     InfoNode<E> root(){ return root;}
 
+    
+    
     abstract Iterator<E> iteratorLevel();
 
     // MANUAL SERIALIZATION
+    /**
+     * 
+     * Serializes the linked tree.
+     * Temporal complexity: assumed O(n) - depends on the implementation of writeData
+     * 
+     * @param oos
+     * @throws IOException
+     */
     @Serial
     private void writeObject(ObjectOutputStream oos) throws IOException {
         writeData(oos);
@@ -66,6 +90,14 @@ abstract class LinkedTree<E> implements Serializable {
     }
 
     // MANUAL DESERIALIZATION
+    /**
+     * Deserializes the linked tree.
+     * Temporal complexity: assumed O(n) - depends on the implementation of addElem
+     * 
+     * @param ois
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     @Serial
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         readData(ois);
@@ -76,6 +108,8 @@ abstract class LinkedTree<E> implements Serializable {
             addElem(element);
         }
     }
+    
+    
     abstract void addElem(E element);
 
     void writeData(ObjectOutputStream oos)
